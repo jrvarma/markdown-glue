@@ -1,0 +1,25 @@
+#!/bin/bash
+
+source ~/bin/split_path
+split_path $1
+
+md_file=$fname_with_ext
+tex_file="${fname_sans_ext}.tex"
+pdf_file="${fname_sans_ext}.pdf"
+
+cd $relative_dirname
+
+template="$HOME/.pandoc/templates/default.beamer"
+# if you do not want to use your own template you can delete the above line
+# and remove --template $template from the following line
+pandoc -t beamer -s $md_file --template $template -o $tex_file && \
+    # you could change xelatex to pdflatex if you prefer that
+    xelatex $tex_file -halt-on-error && \
+    xelatex $tex_file -halt-on-error
+# if you want to view the pdf file in your favourite pdfviewer change the previous line to 
+# xelatex $tex_file -halt-on-error && favourite_pdfviewer $pdf_file
+
+# clean up all intermediate files
+txclean.py $tex_file
+
+

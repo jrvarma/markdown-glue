@@ -1,0 +1,20 @@
+#!/bin/bash
+trap "kill 0" EXIT
+source ~/bin/split_path
+split_path $1
+cd $relative_dirname
+ipynb=$fname_with_ext
+html=${fname_sans_ext}.slides.html
+pdf=${fname_sans_ext}.pdf
+
+# Specify location of python site-packages. For example: /usr/lib/python3.7/site-packages
+# If RISE was installed using --user, it could be $HOME/.local/lib/python3.7/site-packages
+python_site_packages=path/to/your/python/site-packages/
+
+ln -s "$python_site_packages/rise/static/reveal.js" .
+jupyter-nbconvert --to slides $ipynb
+python -m http.server &
+wkhtmltopdf -B 31mm -T 31mm -O Landscape http://localhost:8000/${html}?print-pdf $pdf
+rm $html reveal.js
+
+

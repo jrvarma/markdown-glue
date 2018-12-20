@@ -1,0 +1,11 @@
+#!/bin/bash
+function split_path () {
+    fname_with_ext=${1##*/}
+    fname_sans_ext=${fname_with_ext%.*}
+    if [[ $1 = */* ]] ; then
+        relative_dirname=${1%/*}
+    else
+        relative_dirname=.
+    fi
+    absolute_dirname=`realpath $relative_dirname`
+}

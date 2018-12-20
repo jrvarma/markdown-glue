@@ -1,0 +1,24 @@
+<<echo = False>>=
+##
+import pweave
+pweave.rcParams["chunk"]["defaultoptions"].update(
+{'echo' : False, 'results' : 'tex'})
+##
+@ 
+
+# Plot of `log(x)`
+
+<<>>=
+##
+import numpy as np
+import matplotlib.pyplot as plt
+x = np.arange(1, 10, 0.1)
+plt.plot(x, np.log(x))
+plt.show()
+##
+@
+
+
+# Example of weaving
+
+We use `python` to compute the `log` of 2. The answer is <%=round(np.log(2),8)%>. 

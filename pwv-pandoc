@@ -1,0 +1,11 @@
+#!/bin/bash
+source ~/bin/split_path
+split_path $1
+cd $relative_dirname
+pmd=$fname_with_ext
+tex=${fname_sans_ext}.tex
+pdf=${fname_sans_ext}.pdf
+
+pweave -f markdown -i noweb -o $tex $pmd > /dev/null 
+pandoc --ascii -f markdown -o $pdf $tex
+
