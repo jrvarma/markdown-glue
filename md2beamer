@@ -31,16 +31,16 @@ if [ ! -z "$TEMPLATE" ]; then
     TEMPLATE_OPTION="--template $TEMPLATE"
 fi
 
-if [ -z "$PDFVIEWER" ]; then
-    VIEW_COMMAND="&& $PDFVIEWER $pdf_file"
-fi
 pandoc -t beamer -s $md_file $TEMPLATE_OPTION -o $tex_file && \
-    LATEX $tex_file -halt-on-error && \
-    LATEX $tex_file -halt-on-error $VIEW_COMMAND
+    $LATEX $tex_file -halt-on-error && \
+    $LATEX $tex_file -halt-on-error
+if [[ $? == 0 && ! -z $PDFVIEWER ]] ; then
+    $PDFVIEWER $pdf_file
+fi
 if command -v txclean.py >/dev/null ; then
     txclean.py $tex_file
 else
-    echo "txclean.py no0t found. Intermediate files not deleted."
+    echo "txclean.py not found. Intermediate files not deleted."
 fi
 
 
