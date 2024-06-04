@@ -1,6 +1,24 @@
 #!/bin/bash
 
-source ~/bin/split_path
+# if you want to use your own template, set the variable below fore example
+# TEMPLATE="$HOME/.pandoc/templates/default.beamer"
+TEMPLATE=
+# you could change the variable below to pdflatex if you prefer that
+LATEX=xelatex
+# set the variable below if you want to view the pdf in that viewer
+PDFVIEWER=
+
+function split_path () {
+    fname_with_ext=${1##*/}
+    fname_sans_ext=${fname_with_ext%.*}
+    if [[ $1 = */* ]] ; then
+        relative_dirname=${1%/*}
+    else
+        relative_dirname=.
+    fi
+    absolute_dirname=`realpath $relative_dirname`
+}
+
 split_path $1
 
 md_file=$fname_with_ext
@@ -9,17 +27,21 @@ pdf_file="${fname_sans_ext}.pdf"
 
 cd $relative_dirname
 
-template="$HOME/.pandoc/templates/default.beamer"
-# if you do not want to use your own template you can delete the above line
-# and remove --template $template from the following line
-pandoc -t beamer -s $md_file --template $template -o $tex_file && \
-    # you could change xelatex to pdflatex if you prefer that
-    xelatex $tex_file -halt-on-error && \
-    xelatex $tex_file -halt-on-error
-# if you want to view the pdf file in your favourite pdfviewer change the previous line to 
-# xelatex $tex_file -halt-on-error && favourite_pdfviewer $pdf_file
+if [ ! -z "$TEMPLATE" ]; then
+    TEMPLATE_OPTION="--template $TEMPLATE"
+fi
 
-# clean up all intermediate files
-txclean.py $tex_file
+if [ -z "$PDFVIEWER" ]; then
+    VIEW_COMMAND="&& $PDFVIEWER $pdf_file"
+fi
+pandoc -t beamer -s $md_file $TEMPLATE_OPTION -o $tex_file && \
+    LATEX $tex_file -halt-on-error && \
+    LATEX $tex_file -halt-on-error $VIEW_COMMAND
+if command -v txclean.py >/dev/null ; then
+    txclean.py $tex_file
+else
+    echo "txclean.py no0t found. Intermediate files not deleted."
+fi
+
 
 

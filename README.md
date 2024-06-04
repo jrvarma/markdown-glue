@@ -60,6 +60,8 @@ If you want to make your presentation using a `PDF` viewer and not a `Jupyter-RI
 
 will produce `markdown-for-latex-pdf-conversion.pdf`
 
+You can customize this shell script by modifying the three variables at the top. `TEMPLATE` can be set to your own `pandoc` template file to change the default `beamer` fonts, colours and styles. The `LATEX` variable can be changed from `xelatex` to `pdflatex` or something else. The variable `PDFVIEWER` can be set to automatically open the converted pdf file in that viewer.
+
 If you want to "weave" the output of `python` code into your `markdown` text using `pweave`, the shell script `pwv-pandoc` gets the job done by running `pweave`, `pandoc` and `latex` in succession:
 
     pwv-pandoc markdown-with-embedded-python-file-for-latex-pdf-conversion.pmd

@@ -1,5 +1,15 @@
 #!/bin/bash
-source ~/bin/split_path
+function split_path () {
+    fname_with_ext=${1##*/}
+    fname_sans_ext=${fname_with_ext%.*}
+    if [[ $1 = */* ]] ; then
+        relative_dirname=${1%/*}
+    else
+        relative_dirname=.
+    fi
+    absolute_dirname=`realpath $relative_dirname`
+}
+
 split_path $1
 cd $relative_dirname
 pmd=$fname_with_ext
